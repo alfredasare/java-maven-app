@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     echo "initialize"
-//                     gv = load "script.groovy"
+                    gv = load "script.groovy"
                 }
             }
         }
@@ -23,14 +23,15 @@ pipeline {
                 }
             }
             steps {
-                echo 'testing the application...'
+                script {
+                    gv.testApp();
+                }
             }
         }
         stage("build jar") {
             steps {
                 script {
-                    echo "building jar"
-                    //gv.buildJar()
+                    gv.buildJar()
                 }
             }
         }
@@ -45,9 +46,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    echo "deploying"
-                    echo "deploying version ${params.VERSION}"
-                    //gv.deployApp()
+                    gv.deployApp()
                 }
             }
         }
