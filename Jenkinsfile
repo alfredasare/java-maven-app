@@ -52,8 +52,8 @@ pipeline {
                     sshagent(credentials: ['github-credentials']) {
                         // Need to set this once
                         // Can also ssh into Jenkins server to set it
-                        sh 'git config --global user.email "alfredasare101@gmail.com"'
-                        sh 'git config --global user.name "alfredasare"'
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh 'git config --global user.name "jenkins"'
 
                         sh "git status"
                         sh "git branch"
