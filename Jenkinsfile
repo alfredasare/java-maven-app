@@ -6,44 +6,24 @@ pipeline {
         maven 'maven-3.9'
     }
     stages {
-//         stage("init") {
-//             steps {
-//                 script {
-//                     gv = load "script.groovy"
-//                 }
-//             }
-//         }
-//         stage("build jar") {
-//             steps {
-//                 script {
-//                     gv.buildJar()
-//                 }
-//             }
-//         }
-//         stage("build image") {
-//             steps {
-//                 script {
-//                     gv.buildImage()
-//                 }
-//             }
-//         }
-        stage("test") {
+        stage("init") {
             steps {
                 script {
-                    echo "Testing the application..."
-                    echo "Executing pipeline for branch $BRANCH_NAME"
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage("build") {
-            when {
-                expression {
-                    BRANCH_NAME == 'master'
-                }
-            }
+        stage("build jar") {
             steps {
                 script {
-                    echo "Building the application..."
+                    gv.buildJar()
+                }
+            }
+        }
+        stage("build image") {
+            steps {
+                script {
+                    gv.buildImage()
                 }
             }
         }
@@ -56,7 +36,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application..."
-//                     gv.deployApp()
+                    gv.deployApp()
                 }
             }
         }
