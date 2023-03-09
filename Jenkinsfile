@@ -46,5 +46,26 @@ pipeline {
                 }
             }
         }
+        stage("commit version update") {
+            steps {
+                script {
+                    sshagent(credentials: ['github-credentials']) {
+                        // Need to set this once
+                        // Can also ssh into Jenkins server to set it
+                        sh 'git config --global user.email "alfredasare101@gmail.com"'
+                        sh 'git config --global user.name "alfredasare"'
+
+                        sh "git status"
+                        sh "git branch"
+                        sh "git config --list"
+
+                        sh "git remote set-url origin git@github.com:alfredasare/java-maven-app.git"
+                        sh "git add ."
+                        sh 'git commit -m "ci: version bump"'
+                        sh "git push origin HEAD:jenkins-jobs"
+                    }
+                }
+            }
+        }
     }   
 }
