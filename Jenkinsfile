@@ -52,12 +52,12 @@ pipeline {
                     sshagent(credentials: ['github-credentials']) {
                         // Need to set this once
                         // Can also ssh into Jenkins server to set it
-                        sh 'git config --global user.email "jenkins@example.com"'
-                        sh 'git config --global user.name "jenkins"'
+                        // sh 'git config --global user.email "jenkins@example.com"'
+                        // sh 'git config --global user.name "jenkins"'
 
-                        sh "git status"
-                        sh "git branch"
-                        sh "git config --list"
+                        // sh "git status"
+                        // sh "git branch"
+                        // sh "git config --list"
 
                         sh "git remote set-url origin git@github.com:alfredasare/java-maven-app.git"
                         sh "git add ."
