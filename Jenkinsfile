@@ -23,10 +23,12 @@ pipeline {
                 }
             }
         }
-        stage("build image") {
+        stage("build and push image") {
             steps {
                 script {
                     buildImage "alfredasare/devops-demo-app:jma-3.0"
+                    dockerLogin()
+                    dockerPush 'alfredasare/devops-demo-app:jma-3.0'
                 }
             }
         }
