@@ -14,6 +14,10 @@ def buildImage() {
 
 def deployApp() {
     echo "deploying the application to EC2"
+    def dockerCmd = 'docker run -p 3000:3080 -d alfredasare/devops-demo-app:1.1'
+    sshagent(['ec2-server-key']) {
+        sh "ssh -o StrictHostKeyChecking=no ec2-user@44.199.228.221 ${dockerCmd}"
+    }
 } 
 
 return this
