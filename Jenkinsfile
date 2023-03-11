@@ -17,14 +17,17 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
+    environment {
+        IMAGE_NAME = 'alfredasare/devops-demo-app:java-maven-1.0'
+    }
     stages {
-        stage("init") {
-            steps {
-                script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
+//         stage("init") {
+//             steps {
+//                 script {
+//                     gv = load "script.groovy"
+//                 }
+//             }
+//         }
         stage("build jar") {
             steps {
                 script {
@@ -35,22 +38,21 @@ pipeline {
         stage("build and push image") {
             steps {
                 script {
-                    buildImage "alfredasare/devops-demo-app:jma-3.0"
+                    buildImage(env.IMAGE_NAME)
                     dockerLogin()
-                    dockerPush 'alfredasare/devops-demo-app:jma-3.0'
+                    dockerPush(env.IMAGE_NAME)
                 }
             }
         }
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == 'master'
-                }
-            }
             steps {
                 script {
                     echo "Deploying the app..."
-                    gv.deployApp()
+                    echo "deploying the application to EC2"
+                    def dockerCmd = 'docker run -p 8080:8080 -d ${IMAGE_NAME}'
+                    sshagent(['ec2-server-key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@44.199.228.221 ${dockerCmd}"
+                    }
                 }
             }
         }
