@@ -17,9 +17,6 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
-    environment {
-        IMAGE_NAME = 'alfredasare/devops-demo-app:java-maven-2.0'
-    }
     stages {
 //         stage("init") {
 //             steps {
@@ -28,6 +25,17 @@ pipeline {
 //                 }
 //             }
 //         }
+        stage("increment version") {
+            steps {
+                script {
+                    echo "incrementing app version..."
+                    sh "mvn build-helper:parse-version versions:set -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "alfredasare/devops-demo-app:java-maven-$version-$BUILD_NUMBER"
+                }
+            }
+        }
         stage("build jar") {
             steps {
                 script {
@@ -56,6 +64,18 @@ pipeline {
                         sh "scp server-cmds.sh ${ec2Instance}:/home/ec2-user"
                         sh "scp docker-compose.yaml ${ec2Instance}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
+                    }
+                }
+            }
+        }
+        stage("commit version update") {
+            steps {
+                script {
+                    sshagent(credentials: ['github-credentials']) {
+                        sh "git remote set-url origin git@github.com:alfredasare/java-maven-app.git"
+                        sh "git add ."
+                        sh 'git commit -m "ci: version bump"'
+                        sh "git push origin HEAD:${BRANCH_NAME}"
                     }
                 }
             }
