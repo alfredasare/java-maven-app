@@ -5,6 +5,10 @@ pipeline {
     tools {
         maven 'maven-3.9'
     }
+    environment {
+        DOCKER_REPO_SERVER = '664574038682.dkr.ecr.eu-west-3.amazonaws.com'
+        DOCKER_REPO = "${DOCKER_REPO_SERVER}/java-maven-app"
+    }
     stages {
         stage("init") {
             steps {
@@ -38,11 +42,18 @@ pipeline {
                 }
             }
         }
-        stage("deploy") {
+        stage('deploy') {
+            environment {
+               AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+               AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key_id')
+               APP_NAME = 'java-maven-app'
+            }
             steps {
                 script {
-                    echo "Deploying the application..."
-                    gv.deployApp()
+                   echo 'deploying docker image...'
+                   sh 'envsubst < k8s/deployment.yaml | kubectl apply -f -'
+                   sh 'envsubst < k8s/service.yaml | kubectl apply -f -'
+
                 }
             }
         }
