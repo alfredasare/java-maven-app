@@ -52,7 +52,7 @@ resource "aws_default_security_group" "myapp-default-sg" {
     from_port = 22
     protocol  = "tcp"
     to_port   = 22
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = [var.my_ip, var.jenkins_ip]
   }
 
   ingress {
