@@ -52,6 +52,9 @@ pipeline {
                 }
             }
         }
+        stage('provision server') {
+            // tf will provision new server
+        }
         stage("deploy") {
             steps {
                 script {
