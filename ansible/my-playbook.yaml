@@ -13,7 +13,7 @@
           - docker
         update_cache: yes
         state: present
-        use_backend: dnf
+        use_backend: yum
     - name: Install Docker-compose
       ansible.builtin.get_url:
         # If the url isn't found, use 'url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64'
