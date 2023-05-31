@@ -15,8 +15,6 @@
         state: present
     - name: Install Docker-compose
       ansible.builtin.get_url:
-        # If the url isn't found, use 'url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64'
-        # See available release tags per version here: https://github.com/docker/compose/releases
         url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: +x
@@ -29,3 +27,4 @@
         name:
           - docker
           - docker-compose
+          - urllib3==1.26.6

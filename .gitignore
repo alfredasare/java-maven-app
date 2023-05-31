@@ -1,6 +1,8 @@
 .idea/*
 target
 
+.DS_Store
+
 ### Terraform template
 # Local .terraform directories
 **/.terraform
